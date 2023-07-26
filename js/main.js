@@ -13,7 +13,15 @@ const informationOn = document.getElementById("information-on");
 const informationOff = document.getElementById("information-off");
 const info = document.querySelector(".information");
 const inputData = JSON.parse(localStorage.getItem("userData")) || [];
-let burnCount = localStorage.getItem("count") || [];
+
+let burnCount = 0;
+const uniqueName = inputData[inputData.length - 1].name;
+const burnCountKey = `burnCount_${uniqueName}`;
+burnCount = localStorage.getItem(burnCountKey) || 0;
+glowCount.innerHTML = burnCount;
+
+const bulbStateKey = `bulbState_${uniqueName}`;
+const isBulbOn = localStorage.getItem(bulbStateKey) === 'true';
 
 function saveData() {
   if (
@@ -39,9 +47,8 @@ function saveData() {
 }
 
 welcome.innerHTML = `<div>
-<p class="text-4xl text-center p-5">Welcome: ${
-  inputData[inputData.length - 1].name
-}</p>
+<p class="text-4xl text-center p-5">Welcome: ${inputData[inputData.length - 1].name
+  }</p>
 </div>`;
 
 button.onclick = function () {
@@ -49,23 +56,29 @@ button.onclick = function () {
   if (image.src.match("on")) {
     image.src = "./image/off.png";
     informationOff.innerHTML += `<div>
-    <p>Turned Off</p>
-    <p>${new Date()}</p>
-  </div>`;
+      <p>Turned Off</p>
+      <p>${new Date()}</p>
+    </div>`;
   } else {
     image.src = "./image/on.png";
     burnCount++;
-    localStorage.setItem("count", burnCount);
-    glowCount.innerHTML = localStorage.getItem("count");
+    localStorage.setItem(burnCountKey, burnCount);
+    glowCount.innerHTML = burnCount;
     informationOn.innerHTML += `<div>
-    <p>Turned On</p>
-  <p>${new Date()}</p>
-  </div>`;
+      <p>Turned On</p>
+      <p>${new Date()}</p>
+    </div>`;
   }
   body.classList.toggle("on");
-};
-glowCount.innerHTML = burnCount;
 
-window.onbeforeunload = function() {
-   return "Dude, are you sure you want to leave?";
+  const isBulbOn = image.src.includes("on");
+  localStorage.setItem(bulbStateKey, isBulbOn);
+};
+
+if (isBulbOn) {
+  image.src = "./image/on.png";
+  body.classList.add("on");
+} else {
+  image.src = "./image/off.png";
+  body.classList.remove("on");
 }
