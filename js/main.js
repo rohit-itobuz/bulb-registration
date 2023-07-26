@@ -11,17 +11,16 @@ const glowCount = document.getElementById("glow-count");
 const welcome = document.getElementById("welcome");
 const informationOn = document.getElementById("information-on");
 const informationOff = document.getElementById("information-off");
-const info = document.querySelector(".information");
+const dataInformation = document.querySelector(".information");
 const inputData = JSON.parse(localStorage.getItem("userData")) || [];
-
-let burnCount = 0;
 const uniqueName = inputData[inputData.length - 1].name;
 const burnCountKey = `burnCount_${uniqueName}`;
-burnCount = localStorage.getItem(burnCountKey) || 0;
-glowCount.innerHTML = burnCount;
-
 const bulbStateKey = `bulbState_${uniqueName}`;
 const isBulbOn = localStorage.getItem(bulbStateKey) === 'true';
+
+let burnCount = 0;
+burnCount = localStorage.getItem(burnCountKey) || 0;
+glowCount.innerHTML = burnCount;
 
 function saveData() {
   if (
@@ -51,8 +50,8 @@ welcome.innerHTML = `<div>
   }</p>
 </div>`;
 
-button.onclick = function () {
-  info.classList.remove("hidden");
+button.onclick = () => {
+  dataInformation.classList.remove("hidden");
   if (image.src.match("on")) {
     image.src = "./image/off.png";
     informationOff.innerHTML += `<div>
